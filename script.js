@@ -34,7 +34,11 @@ function addDecimal(){
     }}
 
 operators.forEach((op) => op.addEventListener("click", function(e){
+    op.classList.add("active");
+        
     getOperator(e.target.value);
+
+
 }))
 
 function getOperator(op){
@@ -55,25 +59,23 @@ function getOperator(op){
     } else if(previousValue != "" && currentValue != ""){
         console.log("Calc first before calc and getting Op ", previousValue, operator, currentValue);
         operate();
-        operator = op;
-        console.log("After Calc and set Op ", previousValue, operator, currentValue);
+        removeActive();
+        console.log("After Calc and before set Op ", previousValue, operator, currentValue);
         if(display.textContent === "Error"){
-            currentValue = "";
-            previousValue = "";
-            operator = "";
+            disableBtns();
             console.log("Calc errored Out ", previousValue, operator, currentValue);
         } else{ 
+            operator = op;
             display.textContent = previousValue;
         console.log("Calc without equals ", previousValue, operator, currentValue);
         }
+
     }
 }
 
 allclear.addEventListener("click", function(){
-    previousValue = "";
-    currentValue = "";
-    operator = "";
-    display.textContent = "0";
+    reset();
+    removeActive();
     console.log("All Cleared ", previousValue, operator, currentValue);
 })
 
@@ -81,10 +83,9 @@ equals.addEventListener("click", function(){
     if(currentValue != "" && previousValue != ""){
         operate();
         operator = "";
+        removeActive();        
         if(display.textContent === "Error"){
-            currentValue = "";
-            previousValue = "";
-            operator = "";
+            disableBtns();
             console.log("Equals errored Out ", previousValue, operator, currentValue);
         } else{ 
             display.textContent = previousValue;
@@ -135,11 +136,33 @@ function operate() {
     console.log("sending to roundNum");
     previousValue = roundNum(previousValue);
     console.log("RoundNum done ", previousValue);
-};
+    previousValue = previousValue.toString();
+    previousValue = limitNum(previousValue);
+    };
 
+operators.forEach((op) => op.addEventListener("click", function(e){
+    op.classList.add("active");
+ }))  
+
+function removeActive() {
+    const btns = document.querySelectorAll('.operator');
+    for (const btn of btns) {
+        btn.classList.remove("active");
+    }}
 
 function roundNum(num){
     return Math.round(num * 10000) / 10000;
+}
+
+function limitNum(num) {
+    if(num.length <= 7){
+        return num;
+    } else{
+        num = num.slice(0,7);
+        console.log("limitNum done ", previousValue);
+        return num;
+
+    }
 }
 
 function errorMsg(str){
@@ -147,3 +170,28 @@ function errorMsg(str){
     console.log("error function completed");
     return;
 }
+
+function disableBtns() {
+    const btns = document.querySelectorAll('button');
+    for (const btn of btns) {
+      btn.disabled = true;
+      allclear.disabled = false;
+      console.log("disabling ");
+    }
+    setTimeout(() => {
+      for (const btn of btns) {
+        btn.disabled = false;
+      }
+      console.log("enabling ");
+        reset();
+        removeActive();
+        console.log("reset ", previousValue, operator, currentValue);
+    }, 5000);
+  }
+
+  function reset() {
+    currentValue = "";
+    previousValue = "";
+    operator = "";
+    display.textContent = "0";
+  }

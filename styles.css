@@ -84,13 +84,14 @@ body {
     border-radius: 0px;
     color: white;
     margin: 0;
+    cursor: pointer;
   }
 
   button.zero {
     width: 101px;
     }
 
-  button.operator {
+  button.operator, button.equals {
     background-color: #FFBF00;
 
   }
@@ -99,12 +100,13 @@ body {
     background-color: #696969;
   }
 
-  button.equals {
-    background-color: #FAA0A0;
+  button:hover, button.active {
+    background-image: linear-gradient(rgb(0 0 0/20%) 0 0);
   }
 
-  button.dummy {
+  button.dummy, button:disabled {
     background-color: #101010;
+    cursor: default;
 
   }
 
