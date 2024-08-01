@@ -35,10 +35,7 @@ function addDecimal(){
 
 operators.forEach((op) => op.addEventListener("click", function(e){
     op.classList.add("active");
-        
     getOperator(e.target.value);
-
-
 }))
 
 function getOperator(op){
@@ -69,7 +66,6 @@ function getOperator(op){
             display.textContent = previousValue;
         console.log("Calc without equals ", previousValue, operator, currentValue);
         }
-
     }
 }
 
@@ -92,15 +88,6 @@ equals.addEventListener("click", function(){
         console.log("equals ", previousValue, operator, currentValue);
         }}
 })
-
-/* // operators
-
-const divide = (x, y) => x / y;
-const multiply = (x, y) => x * y;
-const subtract = (x, y) => x - y;
-const add = (x, y) => x + y;
- */
-// operate 
 
 function operate() {
     previousValue = Number(previousValue);
