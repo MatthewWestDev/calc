@@ -6,9 +6,10 @@ let operator = "";
 
 const display = document.querySelector(".display");
 const numbers = document.querySelectorAll(".digit");
+const decimal = document.querySelector(".decimal");
 const operators = document.querySelectorAll(".operator");
-const allclear = document.querySelector(".allclear");
 const equals = document.querySelector(".equals");
+const allclear = document.querySelector(".allclear");
 
 numbers.forEach((number) => number.addEventListener("click", function(e){
     getNumber(e.target.textContent)
@@ -22,9 +23,18 @@ function getNumber(num){
     }
 }
 
+decimal.addEventListener("click", function(){
+    addDecimal();
+    display.textContent = currentValue;
+})
+
+function addDecimal(){
+    if(!currentValue.includes(".")){
+        currentValue += ".";
+    }}
+
 operators.forEach((op) => op.addEventListener("click", function(e){
-    getOperator(e.target.textContent);
-    
+    getOperator(e.target.value);
 }))
 
 function getOperator(op){
@@ -43,11 +53,19 @@ function getOperator(op){
         console.log("Getting Op and waiting ", previousValue, operator, currentValue);
         display.textContent = previousValue;
     } else if(previousValue != "" && currentValue != ""){
-        console.log("Before calc and getting Op ", previousValue, operator, currentValue);
+        console.log("Calc first before calc and getting Op ", previousValue, operator, currentValue);
         operate();
         operator = op;
         console.log("After Calc and set Op ", previousValue, operator, currentValue);
-        display.textContent = previousValue;
+        if(display.textContent === "Error"){
+            currentValue = "";
+            previousValue = "";
+            operator = "";
+            console.log("Calc errored Out ", previousValue, operator, currentValue);
+        } else{ 
+            display.textContent = previousValue;
+        console.log("Calc without equals ", previousValue, operator, currentValue);
+        }
     }
 }
 
@@ -56,23 +74,22 @@ allclear.addEventListener("click", function(){
     currentValue = "";
     operator = "";
     display.textContent = "0";
-    console.log("Cleared ", previousValue, operator, currentValue);
+    console.log("All Cleared ", previousValue, operator, currentValue);
 })
 
 equals.addEventListener("click", function(){
     if(currentValue != "" && previousValue != ""){
-    operate();
-    operator = "";
-    if(display.textContent = "Error"){
-        currentValue = "";
-        previousValue = "";
+        operate();
         operator = "";
-        return;
-    } else {
-    display.textContent = previousValue;
-    console.log("equals ", previousValue, operator, currentValue);
-    }
-    }
+        if(display.textContent === "Error"){
+            currentValue = "";
+            previousValue = "";
+            operator = "";
+            console.log("Equals errored Out ", previousValue, operator, currentValue);
+        } else{ 
+            display.textContent = previousValue;
+        console.log("equals ", previousValue, operator, currentValue);
+        }}
 })
 
 /* // operators
@@ -87,38 +104,46 @@ const add = (x, y) => x + y;
 function operate() {
     previousValue = Number(previousValue);
     currentValue = Number(currentValue);
-    if(operator === "/" && currentValue === 0){
+    if(operator === "divide" && currentValue === 0){
         console.log("Dividing by zero ", previousValue, operator, currentValue);
-        error("Error");
+        errorMsg("Error");
+        console.log("After Error dividing by zero");
         return;
-    } else if (operator === "/") {
+    } else if (operator === "divide") {
         /* result = divide(num1, num2);
         return result; */
         console.log("Dividing ", previousValue, operator, currentValue);
         previousValue /= currentValue;
         currentValue = "";
         console.log("Done dividing ", previousValue, operator, currentValue);
-    } else if (operator === "x") {
+    } else if (operator === "multiply") {
         console.log("Multiplying ", previousValue, operator, currentValue);
         previousValue *= currentValue;
         currentValue = "";
         console.log("Done multiplying ", previousValue, operator, currentValue);
-    } else if (operator === "-") {
+    } else if (operator === "subtract") {
         console.log("Subtracting ", previousValue, operator, currentValue);
         previousValue -= currentValue;
         currentValue = "";
         console.log("Done subtracting ", previousValue, operator, currentValue);
-    } else if (operator === "+") {
+    } else if (operator === "add"){
         console.log("Adding ", previousValue, operator, currentValue);
         previousValue += currentValue;
         currentValue = "";
         console.log("Done adding ", previousValue, operator, currentValue);
     }
-        
+    console.log("sending to roundNum");
+    previousValue = roundNum(previousValue);
+    console.log("RoundNum done ", previousValue);
 };
 
-function error(errormsg){
-    display.textContent = errormsg;
-    console.log("error");
+
+function roundNum(num){
+    return Math.round(num * 10000) / 10000;
+}
+
+function errorMsg(str){
+    display.textContent = str;
+    console.log("error function completed");
     return;
 }
